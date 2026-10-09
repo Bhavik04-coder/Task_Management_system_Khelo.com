@@ -18,15 +18,15 @@ depends_on: Union[str, Sequence[str], None] = None
 def upgrade() -> None:
     op.create_table(
         'tasks',
-        sa.Column('id', sa.BigInteger(), autoincrement=True, nullable=False),
+        sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
         sa.Column('title', sa.String(length=255), nullable=False),
         sa.Column('description', sa.Text(), nullable=True),
         sa.Column('status', sa.String(length=50), nullable=False, server_default='Pending'),
         sa.Column('priority', sa.String(length=50), nullable=False, server_default='Medium'),
         sa.Column('due_date', sa.Date(), nullable=True),
-        sa.Column('user_id', sa.BigInteger(), nullable=False),
+        sa.Column('user_id', sa.Integer(), nullable=False),
         sa.Column('created_at', sa.DateTime(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
-        sa.Column('updated_at', sa.DateTime(), server_default=sa.text('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'), nullable=False),
+        sa.Column('updated_at', sa.DateTime(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
         sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
         sa.PrimaryKeyConstraint('id')
     )

@@ -19,7 +19,7 @@ class Task(Base, TimestampMixin):
     """
     __tablename__ = "tasks"
 
-    id: Mapped[uuid.UUID] = mapped_column(
+    id: Mapped[str] = mapped_column(
         String(36), primary_key=True, default=lambda: str(uuid.uuid4()), index=True
     )
     title: Mapped[str] = mapped_column(
@@ -47,7 +47,7 @@ class Task(Base, TimestampMixin):
         nullable=True,
         index=True
     )
-    user_id: Mapped[uuid.UUID] = mapped_column(
+    user_id: Mapped[str] = mapped_column(
         String(36), ForeignKey("users.id", ondelete="CASCADE"), nullable=False, index=True
     )
 

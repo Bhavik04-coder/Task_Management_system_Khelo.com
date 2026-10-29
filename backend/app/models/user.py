@@ -14,7 +14,7 @@ class User(Base, TimestampMixin):
     """
     __tablename__ = "users"
 
-    id: Mapped[uuid.UUID] = mapped_column(
+    id: Mapped[str] = mapped_column(
         String(36), primary_key=True, default=lambda: str(uuid.uuid4()), index=True
     )
     name: Mapped[str] = mapped_column(

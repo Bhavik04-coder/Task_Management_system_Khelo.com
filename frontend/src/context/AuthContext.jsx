@@ -49,7 +49,7 @@ export function AuthProvider({ children }) {
    */
   const login = async (email, password) => {
     const res = await authService.login({ email, password });
-    if (res.success && res.data) {
+    if (res.success && res.data?.access_token) {
       const { access_token, user: userData } = res.data;
       localStorage.setItem("token", access_token);
       localStorage.setItem("user", JSON.stringify(userData));

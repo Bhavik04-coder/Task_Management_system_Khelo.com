@@ -1,5 +1,6 @@
 from typing import List, TYPE_CHECKING
-from sqlalchemy import BigInteger, Integer, String
+import uuid
+from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database.base import Base, TimestampMixin
 
@@ -13,11 +14,8 @@ class User(Base, TimestampMixin):
     """
     __tablename__ = "users"
 
-    id: Mapped[int] = mapped_column(
-        BigInteger().with_variant(Integer, "sqlite"),
-        primary_key=True,
-        autoincrement=True,
-        index=True
+    id: Mapped[uuid.UUID] = mapped_column(
+        String(36), primary_key=True, default=lambda: str(uuid.uuid4()), index=True
     )
     name: Mapped[str] = mapped_column(
         String(100),
@@ -32,6 +30,9 @@ class User(Base, TimestampMixin):
     password_hash: Mapped[str] = mapped_column(
         String(255),
         nullable=False
+    )
+    role: Mapped[str] = mapped_column(
+        String(20), nullable=False, default="user", server_default="user", index=True
     )
 
     # 1:N Relationship - User has many Tasks (defined with cascade delete)

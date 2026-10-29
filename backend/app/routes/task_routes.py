@@ -1,5 +1,6 @@
 from datetime import date
 from typing import Optional
+from uuid import UUID
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 from app.database.database import get_db
@@ -77,7 +78,7 @@ def get_task_statistics(
     summary="Get a single task by ID"
 )
 def get_task(
-    task_id: int,
+    task_id: UUID,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
@@ -92,7 +93,7 @@ def get_task(
     summary="Update a task"
 )
 def update_task(
-    task_id: int,
+    task_id: UUID,
     task_data: TaskUpdate,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -113,7 +114,7 @@ def update_task(
     summary="Update task status"
 )
 def update_task_status(
-    task_id: int,
+    task_id: UUID,
     status_data: TaskStatusUpdate,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -134,7 +135,7 @@ def update_task_status(
     summary="Delete a task"
 )
 def delete_task(
-    task_id: int,
+    task_id: UUID,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):

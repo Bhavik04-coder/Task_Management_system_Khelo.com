@@ -1,5 +1,6 @@
 from datetime import date
 from typing import Optional
+from uuid import UUID
 from sqlalchemy.orm import Session
 from app.models.user import User
 from app.schemas.task_schema import (
@@ -72,7 +73,7 @@ class TaskController:
         )
 
     @staticmethod
-    def get_task(db: Session, current_user: User, task_id: int) -> dict:
+    def get_task(db: Session, current_user: User, task_id: UUID) -> dict:
         """Retrieves a single task by ID with joined owner information."""
         task = TaskService.get_task_with_user_join(db, task_id, current_user.id)
         task_response = TaskDetailResponse.model_validate(task).model_dump(mode="json")
@@ -86,7 +87,7 @@ class TaskController:
     def update_task(
         db: Session,
         current_user: User,
-        task_id: int,
+        task_id: UUID,
         task_data: TaskUpdate
     ) -> dict:
         """Updates an existing task for the current user."""
@@ -102,7 +103,7 @@ class TaskController:
     def update_status(
         db: Session,
         current_user: User,
-        task_id: int,
+        task_id: UUID,
         status_data: TaskStatusUpdate
     ) -> dict:
         """Updates only the status of a specific task."""
@@ -115,7 +116,7 @@ class TaskController:
         )
 
     @staticmethod
-    def delete_task(db: Session, current_user: User, task_id: int) -> dict:
+    def delete_task(db: Session, current_user: User, task_id: UUID) -> dict:
         """Deletes a task owned by the current user."""
         deleted_id = TaskService.delete_task(db, task_id, current_user.id)
         return success_response(

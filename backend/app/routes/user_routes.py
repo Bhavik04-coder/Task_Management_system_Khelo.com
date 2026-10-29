@@ -2,12 +2,36 @@ from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 from app.database.database import get_db
 from app.models.user import User
-from app.schemas.user_schema import UserUpdate
+from app.schemas.user_schema import UserUpdate, UserResponse
 from app.schemas.common_schema import APIResponse
-from app.helpers.jwt_helper import get_current_user
+from app.helpers.jwt_helper import get_current_user, require_roles
 from app.controllers.user_controller import UserController
 
 router = APIRouter(prefix="/users", tags=["Users"])
+
+
+@router.get(
+    "",
+    status_code=status.HTTP_200_OK,
+    response_model=APIResponse[dict],
+    summary="List users (admin only)"
+)
+def list_users(
+    current_user: User = Depends(require_roles("admin")),
+    db: Session = Depends(get_db)
+):
+    """Returns all user profiles to administrators."""
+    users = db.query(User).order_by(User.created_at.desc()).all()
+    return {
+        "success": True,
+        "message": "Users retrieved successfully",
+        "data": {
+            "users": [
+                UserResponse.model_validate(user).model_dump(mode="json")
+                for user in users
+            ]
+        }
+    }
 
 
 @router.get(

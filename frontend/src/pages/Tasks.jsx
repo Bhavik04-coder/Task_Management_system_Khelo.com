@@ -131,7 +131,12 @@ export default function Tasks() {
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">Tasks</h1>
           <p className="mt-1 text-xs sm:text-sm text-slate-500">Organize, filter, and track all your tasks ({total} total)</p>
         </div>
-        <Button variant="primary" icon={Plus} onClick={() => setIsCreateModalOpen(true)}>Add Task</Button>
+        <div className="flex items-center gap-2">
+          <Button variant="secondary" icon={RefreshCw} onClick={fetchTasks} disabled={loading}>
+            Refresh
+          </Button>
+          <Button variant="primary" icon={Plus} onClick={() => setIsCreateModalOpen(true)}>Add Task</Button>
+        </div>
       </div>
 
       <TaskFilterBar filters={filters} onFilterChange={handleFilterChange} onResetFilters={handleResetFilters} />

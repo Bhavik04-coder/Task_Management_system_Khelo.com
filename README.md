@@ -22,6 +22,7 @@ A full-stack task management application with user authentication, task CRUD ope
 ## Features
 
 - User registration and JWT authentication
+- Role-based access control with user and admin roles
 - Create, read, update, delete tasks
 - Task filtering by status, priority, due date
 - Search tasks by title/description
@@ -151,23 +152,28 @@ Application will be available at `http://localhost:5173`
 ## Database Schema
 
 ### Users Table
-- `id` - Primary key
+- `id` - UUID primary key
 - `name` - User's full name
 - `email` - Unique email (indexed)
 - `password_hash` - Bcrypt hashed password
+- `role` - `user` or `admin`
 - `created_at`, `updated_at` - Timestamps
 
 ### Tasks Table
-- `id` - Primary key
+- `id` - UUID primary key
 - `title` - Task title
 - `description` - Task description (optional)
 - `status` - Pending | In Progress | Completed
 - `priority` - Low | Medium | High
 - `due_date` - Due date (optional)
-- `user_id` - Foreign key to users
+- `user_id` - UUID foreign key to users
 - `created_at`, `updated_at` - Timestamps
 
 **Relationship:** One user has many tasks (1:N with CASCADE delete)
+
+Administrators can use `GET /api/users`; regular users receive `403 Forbidden`.
+The UUID conversion and role column are applied by Alembic revision
+`003_add_uuid_ids_and_roles`.
 
 ## Postman Collection
 

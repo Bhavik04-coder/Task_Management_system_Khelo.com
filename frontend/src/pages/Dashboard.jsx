@@ -9,7 +9,8 @@ import {
   Plus,
   ArrowRight,
   Calendar,
-  AlertCircle
+  AlertCircle,
+  RefreshCw
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { taskService } from "../services/taskService";
@@ -98,14 +99,14 @@ export default function Dashboard() {
             {todayFormatted}
           </p>
         </div>
-        <Button
-          variant="primary"
-          icon={Plus}
-          onClick={() => setIsModalOpen(true)}
-          className="self-start sm:self-auto"
-        >
-          Create Task
-        </Button>
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <Button variant="secondary" icon={RefreshCw} onClick={fetchDashboardData} disabled={loading}>
+            Refresh
+          </Button>
+          <Button variant="primary" icon={Plus} onClick={() => setIsModalOpen(true)}>
+            Create Task
+          </Button>
+        </div>
       </div>
 
       {error && (

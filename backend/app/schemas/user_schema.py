@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Optional
+from uuid import UUID
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
 
 
@@ -28,7 +29,8 @@ class UserUpdate(BaseModel):
 
 class UserResponse(UserBase):
     """Schema for user responses (excludes password_hash)."""
-    id: int
+    id: UUID
+    role: str
     created_at: datetime
     updated_at: datetime
 

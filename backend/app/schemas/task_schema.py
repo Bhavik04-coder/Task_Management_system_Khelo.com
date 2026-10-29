@@ -1,6 +1,7 @@
 from datetime import datetime, date
 from enum import Enum
 from typing import Optional, List
+from uuid import UUID
 from pydantic import BaseModel, Field, ConfigDict
 from app.schemas.user_schema import UserResponse
 
@@ -47,8 +48,8 @@ class TaskStatusUpdate(BaseModel):
 
 class TaskResponse(TaskBase):
     """Schema for task response objects."""
-    id: int
-    user_id: int
+    id: UUID
+    user_id: UUID
     created_at: datetime
     updated_at: datetime
 

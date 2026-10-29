@@ -38,7 +38,8 @@ class AuthService:
         new_user = User(
             name=user_data.name.strip(),
             email=normalized_email,
-            password_hash=hashed_password
+            password_hash=hashed_password,
+            role="user"
         )
 
         db.add(new_user)
@@ -73,7 +74,8 @@ class AuthService:
         token_payload = {
             "sub": str(user.id),
             "email": user.email,
-            "name": user.name
+            "name": user.name,
+            "role": user.role
         }
         access_token = create_access_token(data=token_payload)
 

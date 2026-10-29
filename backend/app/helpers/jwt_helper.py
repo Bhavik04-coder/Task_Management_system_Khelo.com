@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone
 from typing import Optional, Dict, Any
+from uuid import UUID
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import jwt, JWTError
@@ -77,7 +78,7 @@ def get_current_user(
         user_id_str: Optional[str] = payload.get("sub")
         if user_id_str is None:
             raise credentials_exception
-        user_id = int(user_id_str)
+        user_id = UUID(user_id_str)
     except (JWTError, ValueError, TypeError):
         raise credentials_exception
 
@@ -90,3 +91,18 @@ def get_current_user(
         )
 
     return user
+
+
+def require_roles(*allowed_roles: str):
+    """Creates a dependency that allows only users with one of the given roles."""
+    normalized_roles = {role.lower() for role in allowed_roles}
+
+    def role_checker(current_user: User = Depends(get_current_user)) -> User:
+        if current_user.role.lower() not in normalized_roles:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="You do not have permission to access this resource."
+            )
+        return current_user
+
+    return role_checker

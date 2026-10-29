@@ -1,5 +1,6 @@
 from datetime import date
 from typing import Optional, List, Tuple, Dict, Any
+from uuid import UUID
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import or_, func
@@ -33,7 +34,7 @@ class TaskService:
     @staticmethod
     def get_user_tasks(
         db: Session,
-        user_id: int,
+        user_id: UUID,
         status_filter: Optional[str] = None,
         priority_filter: Optional[str] = None,
         due_date_filter: Optional[date] = None,
@@ -67,7 +68,7 @@ class TaskService:
         return tasks, total
 
     @staticmethod
-    def get_task_by_id_and_user(db: Session, task_id: int, user_id: int) -> Task:
+    def get_task_by_id_and_user(db: Session, task_id: UUID, user_id: UUID) -> Task:
         """Retrieves a task by ID while strictly verifying ownership."""
         task = db.query(Task).filter(Task.id == task_id, Task.user_id == user_id).first()
         if not task:
@@ -78,7 +79,7 @@ class TaskService:
         return task
 
     @staticmethod
-    def get_task_with_user_join(db: Session, task_id: int, user_id: int) -> Task:
+    def get_task_with_user_join(db: Session, task_id: UUID, user_id: UUID) -> Task:
         """
         Retrieves a task with an ORM eager join on the User table.
         Demonstrates SQLAlchemy joinedload optimization.
@@ -96,7 +97,7 @@ class TaskService:
         return task
 
     @staticmethod
-    def get_task_stats(db: Session, user_id: int) -> Dict[str, int]:
+    def get_task_stats(db: Session, user_id: UUID) -> Dict[str, int]:
         """
         Aggregates dashboard statistics for the authenticated user.
         Calculates total, pending, in-progress, completed, high-priority, and overdue task counts.
@@ -126,8 +127,8 @@ class TaskService:
     @staticmethod
     def update_task(
         db: Session,
-        task_id: int,
-        user_id: int,
+        task_id: UUID,
+        user_id: UUID,
         task_data: TaskUpdate
     ) -> Task:
         """Updates fields of an existing user task."""
@@ -151,8 +152,8 @@ class TaskService:
     @staticmethod
     def update_task_status(
         db: Session,
-        task_id: int,
-        user_id: int,
+        task_id: UUID,
+        user_id: UUID,
         new_status: str
     ) -> Task:
         """Updates only the status field of a user task."""
@@ -163,7 +164,7 @@ class TaskService:
         return task
 
     @staticmethod
-    def delete_task(db: Session, task_id: int, user_id: int) -> int:
+    def delete_task(db: Session, task_id: UUID, user_id: UUID) -> UUID:
         """Deletes a user task by ID."""
         task = TaskService.get_task_by_id_and_user(db, task_id, user_id)
         db.delete(task)
